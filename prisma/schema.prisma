@@ -11,12 +11,14 @@ datasource db {
 }
 
 model users {
-  id       Int        @id @default(autoincrement())
-  email    String     @unique
-  name     String
-  is_active Boolean @default(true)
-  password String
-  sessions sessions[]
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  name       String
+  is_active  Boolean    @default(true)
+  password   String
+  sessions   sessions[]
+  created_at DateTime   @default(now())
+  updated_at DateTime?  
 }
 
 model sessions {
@@ -27,8 +29,8 @@ model sessions {
   expired_at    DateTime
   last_activity DateTime @default(now())
   created_at    DateTime @default(now())
-  updated_at    DateTime
-  deleted_at    DateTime
+  updated_at    DateTime?
+  deleted_at    DateTime?
   user          users    @relation(fields: [user_id], references: [id])
 
   @@unique([token], map: "sessions_pkey")
@@ -38,6 +40,9 @@ model categories {
   id                 Int                  @id @default(autoincrement())
   name               String               @unique
   article_categories article_categories[]
+  is_active          Boolean              @default(true)
+  created_at         DateTime             @default(now())
+  updated_at         DateTime?
 }
 
 model articles {
@@ -48,12 +53,18 @@ model articles {
   source_link      String
   category         article_categories[]
   body_description String
+  is_active        Boolean              @default(true)
+  created_at       DateTime             @default(now())
+  updated_at       DateTime?
 }
 
 model article_categories {
   id          Int        @id @default(autoincrement())
   id_article  Int
   id_category Int
+  is_active   Boolean    @default(true)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime?
   article     articles   @relation(fields: [id_article], references: [id])
   category    categories @relation(fields: [id_category], references: [id])
 }

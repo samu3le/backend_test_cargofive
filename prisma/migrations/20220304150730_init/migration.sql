@@ -1,0 +1,22 @@
+-- AlterTable
+ALTER TABLE "article_categories" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "is_active" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "updated_at" TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE "articles" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "is_active" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "updated_at" TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE "categories" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "is_active" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "updated_at" TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE "sessions" ALTER COLUMN "updated_at" DROP NOT NULL,
+ALTER COLUMN "deleted_at" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "updated_at" TIMESTAMP(3);
