@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserNotFoundException } from './exceptions/userNotFound.exception';
+import { Logger } from '@nestjs/common';
 
 export type User = {
   id: number;
@@ -34,6 +35,8 @@ export class UsersService {
   }
 
   async findUser(email: string): Promise<any> {
+    Logger.log('info ', email);
+
     const user = await this.prisma.users.findUnique({
       where: { email },
     });
