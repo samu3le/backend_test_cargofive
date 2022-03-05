@@ -4,32 +4,47 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserNotFoundException } from './exceptions/userNotFound.exception';
 
+export type User = {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+};
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { };
+  constructor(private prisma: PrismaService) { }
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return this.prisma.users.create({ data: createUserDto });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.users.findMany();
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     const user = this.prisma.users.findUnique({
-      where: { id },
+      where: { id: id },
     });
 
     if (!user) {
-      console.log('first');
       throw new UserNotFoundException();
     }
-
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async findUser(email: string): Promise<any> {
+    const user = await this.prisma.users.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+    return user;
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
     return this.prisma.users.update({ where: { id }, data: updateUserDto });
   }
 }
