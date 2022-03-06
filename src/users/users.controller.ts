@@ -3,10 +3,11 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthenticatedGuard } from './auth/authenticated.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
 @ApiTags('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
@@ -15,10 +16,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Get('get_all')
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    return {
+      users: await this.usersService.findAll(),
+    };
   }
 
   @Get(':id')
@@ -31,8 +33,8 @@ export class UsersController {
     return this.usersService.findUser(email);
   }
 
-  @Post('update:id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Post('update')
+  update(@Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(updateUserDto);
   }
 }

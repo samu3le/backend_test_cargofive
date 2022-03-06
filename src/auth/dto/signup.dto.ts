@@ -2,27 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
     IsAlphanumeric,
     IsNotEmpty,
-    IsString,
     IsEmail,
     MinLength,
-    MaxLength,
     ValidateIf,
 } from 'class-validator';
 import { IsEqualTo } from 'src/decorador/CustomMatchPasswords.decorador';
 
-export class CreateUserDto {
+export class SignupDto {
     @ApiProperty({ required: true })
     @IsEmail()
     @IsNotEmpty()
     @MinLength(5)
     email: string;
-
-    @ApiProperty({ required: true })
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(5)
-    @MaxLength(25)
-    name: string;
 
     @ApiProperty({ required: true })
     @IsAlphanumeric()
