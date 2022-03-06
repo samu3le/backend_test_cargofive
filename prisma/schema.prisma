@@ -17,6 +17,7 @@ model users {
   is_active  Boolean    @default(true)
   password   String
   sessions   sessions[]
+  hashedRT   String?
   created_at DateTime   @default(now())
   updated_at DateTime?  
 }
