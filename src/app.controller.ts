@@ -5,43 +5,59 @@ import {
   Request,
   Body,
   UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
-import { LocalAuthGuard } from './auth/guards/local-auth.guard';
-import { AuthService } from './auth/auth.service';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+
+import { SigninDto } from './auth/dto/signin.dto';
 import { SignupDto } from './auth/dto/signup.dto';
+
+import { AuthService } from './auth/auth.service';
 import { Tokens } from './auth/types';
+import { RtGuard } from './common/guards';
+import { GetCurrentUser, GetCurrentUserId, Public } from './common/decorators';
 
 @Controller()
 export class AppController {
   constructor(private readonly authService: AuthService) { }
 
-  @UseGuards(LocalAuthGuard)
-  @Post('signin')
-  async signin(@Request() req): Promise<any> {
-    return {
-      email: req.user.email,
-      name: req.user.name,
-      token: await this.authService.signin(req.user),
-    };
+  @Public()
+  @Post('sign_in')
+  @HttpCode(HttpStatus.OK)
+  async signIn(@Body() signinDto: SigninDto): Promise<Tokens> {
+    return this.authService.signIn(signinDto);
   }
 
-  @Post('signup')
-  async signup(@Body() signupDto: SignupDto): Promise<Tokens> {
-    return this.authService.signup(signupDto);
+  @Public()
+  @Post('sign_up')
+  @HttpCode(HttpStatus.CREATED)
+  async signUp(@Body() signupDto: SignupDto): Promise<Tokens> {
+    return this.authService.signUp(signupDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('logout')
-  async logout(@Request() req): Promise<any> {
-    const destroyed_session = this.authService.logout();
-    if (!destroyed_session) throw new Error('Error ');
-    return 'msg: logout';
+
+  @Post('sign_out')
+  @HttpCode(HttpStatus.OK)
+  async signOut(@GetCurrentUserId() userId: number): Promise<any> {
+    console.log(userId, "id");
+    return this.authService.signOut(userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('protected')
+  @HttpCode(HttpStatus.OK)
   getHello(@Request() req): string {
     return req.user;
+  }
+
+  @Public()
+  @UseGuards(RtGuard)
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  refreshTokens(
+    @GetCurrentUserId() userId: number,
+    @GetCurrentUser('refreshToken') refreshToken: string,
+  ) {
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }

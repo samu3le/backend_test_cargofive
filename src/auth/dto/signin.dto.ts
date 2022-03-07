@@ -4,11 +4,9 @@ import {
     IsNotEmpty,
     IsEmail,
     MinLength,
-    ValidateIf,
 } from 'class-validator';
-import { IsEqualTo } from 'src/common/decorators';
 
-export class SignupDto {
+export class SigninDto {
     @ApiProperty({ required: true })
     @IsEmail()
     @IsNotEmpty()
@@ -20,11 +18,4 @@ export class SignupDto {
     @IsNotEmpty()
     @MinLength(5)
     password: string;
-
-    @ApiProperty({ required: true })
-    @ValidateIf((data) => data.password)
-    @IsAlphanumeric()
-    @IsNotEmpty()
-    @IsEqualTo('password')
-    passwordConfirmation: string;
 }

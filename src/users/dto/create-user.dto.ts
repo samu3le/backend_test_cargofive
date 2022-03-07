@@ -8,7 +8,7 @@ import {
     MaxLength,
     ValidateIf,
 } from 'class-validator';
-import { IsEqualTo } from 'src/decorador/CustomMatchPasswords.decorador';
+import { IsEqualTo } from 'src/common/decorators';
 
 export class CreateUserDto {
     @ApiProperty({ required: true })
@@ -31,7 +31,7 @@ export class CreateUserDto {
     password: string;
 
     @ApiProperty({ required: true })
-    @ValidateIf(data => data.password)
+    @ValidateIf((data) => data.password)
     @IsAlphanumeric()
     @IsNotEmpty()
     @IsEqualTo('password')
