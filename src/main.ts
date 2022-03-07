@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,10 +26,9 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors();
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  // const reflector = new Reflector();
-  // app.useGlobalGuards(new JwtAuthGuard(reflector));
+  app.enableCors();
 
   await app.listen(3000);
 }

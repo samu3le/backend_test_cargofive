@@ -8,13 +8,14 @@ import {
     MaxLength,
     ValidateIf,
 } from 'class-validator';
-import { IsEqualTo } from 'src/common/decorators';
+import { IsEqualTo, UserExists } from 'src/common/decorators';
 
 export class CreateUserDto {
     @ApiProperty({ required: true })
     @IsEmail()
     @IsNotEmpty()
     @MinLength(5)
+    @UserExists()
     email: string;
 
     @ApiProperty({ required: true })

@@ -7,12 +7,14 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards';
+import { UserExistsRule } from './helper/validator';
 
 @Module({
   imports: [UsersModule, PrismaModule, AuthModule, ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [
     PrismaService,
+    UserExistsRule,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
