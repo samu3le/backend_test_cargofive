@@ -16,25 +16,9 @@ model users {
   name       String?
   is_active  Boolean    @default(true)
   password   String
-  sessions   sessions[]
   hashedRT   String?
   created_at DateTime   @default(now())
   updated_at DateTime?  
-}
-
-model sessions {
-  token         String
-  user_id       Int
-  ip_address    String
-  user_agent    String
-  expired_at    DateTime
-  last_activity DateTime @default(now())
-  created_at    DateTime @default(now())
-  updated_at    DateTime?
-  deleted_at    DateTime?
-  user          users    @relation(fields: [user_id], references: [id])
-
-  @@unique([token], map: "sessions_pkey")
 }
 
 model categories {
@@ -49,7 +33,7 @@ model categories {
 model articles {
   id               Int                  @id @default(autoincrement())
   title            String
-  published_at     DateTime
+  published_at     String
   author           String
   source_link      String
   category         article_categories[]

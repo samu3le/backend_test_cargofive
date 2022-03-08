@@ -35,15 +35,13 @@ export class AppController {
     return this.authService.signUp(signupDto);
   }
 
-
   @Post('sign_out')
   @HttpCode(HttpStatus.OK)
   async signOut(@GetCurrentUserId() userId: number): Promise<any> {
-    console.log(userId, "id");
+    console.log(userId, 'id');
     return this.authService.signOut(userId);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get('protected')
   @HttpCode(HttpStatus.OK)
   getHello(@Request() req): string {
