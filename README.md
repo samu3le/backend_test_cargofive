@@ -12,6 +12,8 @@
 ## Installation
 
 ```bash
+$ nvm install v16.13.1
+$ nvm use
 $ npm install
 ```
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -17,22 +18,27 @@ export class CategoriesService {
     });
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll() {
+    return {
+      categories: await this.prisma.categories.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+      }),
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
-
-  async findByName(name: string) {
-    const category = await this.prisma.categories.findUnique({
-      where: { name: name },
-    });
-
-    if (!category) {
-      return false;
-    }
-    return category;
+  async findAllArticles(nameCategory: CreateCategoryDto) {
+    return {
+      articles: await this.prisma.categories.findMany({
+        where: {
+          name: nameCategory.name,
+        },
+        include: {
+          article: true,
+        },
+      }),
+    };
   }
 }

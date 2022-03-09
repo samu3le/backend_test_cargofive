@@ -109,6 +109,9 @@ export class ScrapperService {
       is_scrapped = await this.goToPage(URL, page);
     }
     await browser.close();
-    return is_scrapped;
+    return {
+      data: is_scrapped,
+      message: `${is_scrapped ? 'Successfully' : 'Failure'} to Scrappe Articles`,
+    };
   }
 }

@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-export class CreateCategoryDto {
+export class ArticleDto {
     @IsNotEmpty()
-    name: string;
+    author: string;
 }
