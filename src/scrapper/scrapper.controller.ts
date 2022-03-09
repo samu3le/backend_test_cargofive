@@ -9,7 +9,7 @@ export class ScrapperController {
   constructor(private readonly scrapperService: ScrapperService) { }
 
   @Get()
-  scrapperControlText(@Body() dataScraperDto: DataScrapperDto) {
-    return this.scrapperService.getData(dataScraperDto);
+  scrapperControlText() {
+    return this.scrapperService.getData();
   }
 }

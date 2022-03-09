@@ -65,13 +65,7 @@ export class ScrapperService {
     return true;
   }
 
-  async getData(dataScrapperDto: DataScrapperDto) {
-    const category = dataScrapperDto.category;
-    const URL = `https://cargofive.com/es/category/${category}/`;
-    const browser = await puppeteer.launch({
-      headless: false,
-    });
-    const page = await browser.newPage();
+  async goToPage(URL, page) {
     await page.goto(URL, { waitUntil: 'networkidle2' });
 
     const results = await page.evaluate(() => {
@@ -97,9 +91,24 @@ export class ScrapperService {
       articles.push(articleData);
     }
     console.log('getDataViaPuppeteer results :', articles);
-    await browser.close();
 
     const saveData = await this.saveRegisters(articles);
-    return articles;
+    return saveData;
+  }
+
+  async getData() {
+    const category = ['logistica-internacional', 'innovacion'];
+
+    const browser = await puppeteer.launch({
+      headless: false,
+    });
+    const page = await browser.newPage();
+    let is_scrapped = true;
+    for (const scraper of category) {
+      const URL = `https://cargofive.com/es/category/${scraper}/`;
+      is_scrapped = await this.goToPage(URL, page);
+    }
+    await browser.close();
+    return is_scrapped;
   }
 }

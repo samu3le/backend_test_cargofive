@@ -5,11 +5,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ArticlesService {
   constructor(private prisma: PrismaService) { }
 
-  findAll() {
-    return this.prisma.articles.findMany({
-      include: {
-        category: true,
-      },
-    });
+  async findAll() {
+    return {
+      articles: await this.prisma.articles.findMany({
+        include: {
+          category: true,
+        },
+      }),
+    };
   }
 }
