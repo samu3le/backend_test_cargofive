@@ -42,3 +42,7 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Postman Collection
+
+[Archivo .json](/public/postman/Cargofive.postman_collection.json)
