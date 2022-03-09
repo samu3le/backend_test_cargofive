@@ -17,7 +17,7 @@ export class AuthService {
         private prisma: PrismaService,
     ) { }
 
-    async signIn(signinDto: SigninDto): Promise<Tokens> {
+    async signIn(signinDto: SigninDto) {
         const user = await this.usersService.findUser(signinDto.email);
         const passwordMatches = await bcrypt.compare(
             signinDto.password,
@@ -28,7 +28,15 @@ export class AuthService {
 
         const tokens = await this.getTokens(user.id, user.email);
         await this.updateRtHash(user.id, tokens.refresh_token);
-        return tokens;
+        const data = {
+            'name': user?.name,
+            'email': user.email,
+            'token': tokens,
+        }
+        return {
+            'data': data,
+            'message': 'User signed in successfully.',
+        };
     }
 
     async getTokens(userId: number, email: string): Promise<Tokens> {
@@ -61,7 +69,7 @@ export class AuthService {
 
     }
 
-    async signUp(signupDto: SignupDto): Promise<Tokens> {
+    async signUp(signupDto: SignupDto) {
         const hash = await hashData(signupDto.password);
         const newUser = await this.prisma.users.create({
             data: {
@@ -71,7 +79,16 @@ export class AuthService {
         });
         const tokens = await this.getTokens(newUser.id, newUser.email);
         await this.updateRtHash(newUser.id, tokens.refresh_token);
-        return tokens;
+
+        const data = {
+            'name': newUser?.name,
+            'email': newUser.email,
+            'token': tokens,
+        }
+        return {
+            'data': data,
+            'message': 'User created successfully.',
+        };
     }
 
     async updateRtHash(userId: number, refreshToken: string) {

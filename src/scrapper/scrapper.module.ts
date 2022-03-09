@@ -4,7 +4,6 @@ import { ScrapperController } from './scrapper.controller';
 import { ArticlesService } from '../articles/articles.service';
 import { CategoriesService } from '../categories/categories.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ArticleCategoriesService } from '../article-categories/article-categories.service';
 
 @Module({
   controllers: [ScrapperController],
@@ -13,7 +12,6 @@ import { ArticleCategoriesService } from '../article-categories/article-categori
     ArticlesService,
     CategoriesService,
     PrismaService,
-    ArticleCategoriesService,
   ],
 })
 export class ScrapperModule { }

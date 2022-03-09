@@ -24,14 +24,14 @@ export class AppController {
   @Public()
   @Post('sign_in')
   @HttpCode(HttpStatus.OK)
-  async signIn(@Body() signinDto: SigninDto): Promise<Tokens> {
+  async signIn(@Body() signinDto: SigninDto) {
     return this.authService.signIn(signinDto);
   }
 
   @Public()
   @Post('sign_up')
   @HttpCode(HttpStatus.CREATED)
-  async signUp(@Body() signupDto: SignupDto): Promise<Tokens> {
+  async signUp(@Body() signupDto: SignupDto) {
     return this.authService.signUp(signupDto);
   }
 

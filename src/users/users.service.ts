@@ -38,7 +38,7 @@ export class UsersService {
   }
 
   async findAll() {
-    return this.prisma.users.findMany();
+    return { data: await this.prisma.users.findMany() };
   }
 
   async findOne(id: number) {

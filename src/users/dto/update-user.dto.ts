@@ -17,6 +17,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     id: number;
 
     @ApiProperty({ required: false })
+    @ValidateIf((data) => data.is_active)
     @IsBoolean()
     is_active?: boolean;
 

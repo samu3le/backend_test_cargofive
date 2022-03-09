@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as puppeteer from 'puppeteer';
-import { ArticleCategoriesService } from 'src/article-categories/article-categories.service';
-import { ArticlesService } from 'src/articles/articles.service';
-import { CategoriesService } from 'src/categories/categories.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { DataScrapperDto } from './dto/data-scrapper.dto';
 
 @Injectable()
 export class ScrapperService {
-  constructor(
-    private categoriesService: CategoriesService,
-    private articlesService: ArticlesService,
-    private articleCategoryService: ArticleCategoriesService,
-  ) { }
+  constructor(private prisma: PrismaService) { }
 
   async getArticle(page, url) {
     await page.goto(url, { waitUntil: 'networkidle2' });
@@ -38,28 +33,40 @@ export class ScrapperService {
 
   async saveRegisters(articles) {
     for (const article of articles) {
-      const articleInsert = await this.articlesService.create(article);
+      const { title, published_at, author, source, description, category } =
+        article;
+      const categories = [];
+
+      category.forEach((category_name) => {
+        categories.push({
+          create: { name: category_name },
+          where: { name: category_name },
+        });
+      });
+      const articleInsert = await this.prisma.articles.upsert({
+        where: {
+          title: title,
+        },
+        update: {},
+        create: {
+          title: title,
+          published_at: published_at,
+          author: author,
+          source_link: source,
+          body_description: description,
+          category: {
+            connectOrCreate: categories,
+          },
+        },
+      });
+
       if (!articleInsert) return false;
-      for (const category of article['category']) {
-        console.log(category, 'category');
-        const categoryInsert = await this.categoriesService.create(category);
-        if (!categoryInsert) return false;
-        const findArticleCategory = await this.articleCategoryService.find(
-          articleInsert.id,
-          categoryInsert.id,
-        );
-        if (findArticleCategory == null) {
-          await this.articleCategoryService.create(
-            articleInsert.id,
-            categoryInsert.id,
-          );
-        }
-      }
     }
     return true;
   }
 
-  async getData(category: string) {
+  async getData(dataScrapperDto: DataScrapperDto) {
+    const category = dataScrapperDto.category;
     const URL = `https://cargofive.com/es/category/${category}/`;
     const browser = await puppeteer.launch({
       headless: false,
@@ -92,7 +99,7 @@ export class ScrapperService {
     console.log('getDataViaPuppeteer results :', articles);
     await browser.close();
 
-    const saveData = this.saveRegisters(articles);
+    const saveData = await this.saveRegisters(articles);
     return articles;
   }
 }

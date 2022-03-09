@@ -11,7 +11,6 @@ import { UserExistsRule } from './helper/validator';
 import { ScrapperModule } from './scrapper/scrapper.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ArticlesModule } from './articles/articles.module';
-import { ArticleCategoriesModule } from './article-categories/article-categories.module';
 
 @Module({
   imports: [
@@ -22,7 +21,6 @@ import { ArticleCategoriesModule } from './article-categories/article-categories
     ScrapperModule,
     CategoriesModule,
     ArticlesModule,
-    ArticleCategoriesModule,
   ],
   controllers: [AppController],
   providers: [
